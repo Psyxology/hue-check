@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUE Allocation Checker</title>
+<style>
+    body {
+        background-color: #3498db; /* Blue background color */
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background-color: #fff; /* White background color for form container */
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    input[type="text"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .popup-content {
+        margin-bottom: 20px;
+    }
+    .popup-close {
+        cursor: pointer;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+    a {
+        color: #3498db;
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>HUE Allocation Checker</h1>
+    <form id="walletForm">
+        <input type="text" id="walletAddress" placeholder="Enter your wallet address">
+        <button type="submit">Check Allocation</button>
+    </form>
+    <p>Created by <a href="https://twitter.com/psyxology_" target="_blank">@psyxology_</a> & <a href="https://twitter.com/PatchezNFT" target="_blank">@PatchezNFT</a></p>
+</div>
+<div class="popup" id="popup">
+    <div class="popup-content" id="popupContent"></div>
+    <span class="popup-close" onclick="closePopup()">X</span>
+</div>
+<script>
+    document.getElementById("walletForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var walletAddress = document.getElementById("walletAddress").value;
+        fetch('/stats?wallet_address=' + walletAddress)
+            .then(response => response.json())
+            .then(data => {
+                var popupContent = document.getElementById("popupContent");
+                popupContent.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                document.getElementById("popup").style.display = "block";
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+</script>
+</body>
+</html>
